@@ -4,7 +4,7 @@
 
 ## Aktif
 - **Modül:** M0 — Kurulum ve iskelet
-- **Adım:** M0.5 — Web iskeleti
+- **Adım:** M0.6 — Makefile + CI
 - **Gün:** 1 / 7
 
 ## Ortam (M0.1'de doldurulur)
@@ -28,6 +28,7 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | G0 | ✅ | Kullanıcı onayı: repo adı `FEM_STUDIO`, görünürlük public | 2026-11-07 |
 | M0.3 | ✅ | `gh auth login` (yzd-info) tamamlandı; `gh repo create FEM_STUDIO --public --source . --remote origin --push` → https://github.com/yzd-info/FEM_STUDIO | 2026-11-07 |
 | M0.4 | ✅ | `core/pyproject.toml` (src layout, ruff+mypy+pytest+hypothesis+scikit-fem); `fem1d/__init__.py` (`__version__="0.1.0"`); `test_version_is_semver_string` kırmızı→yeşil; `uv run ruff check`/`ruff format --check`/`mypy` temiz | 2026-11-07 |
+| M0.5 | ✅ | Vite+TS strict scaffold (`npm create vite -- --template vanilla-ts`), boş sayfa ("FEM1D Studio"); vitest (jsdom) + Playwright (Chromium) kuruldu; `smoke.test.ts` ve `smoke.spec.ts` kırmızı→yeşil; `tsc --noEmit` temiz | 2026-11-07 |
 
 ## Modül kapıları
 | Modül | Özet dosyası | Etiket | Kullanıcı onayı |
