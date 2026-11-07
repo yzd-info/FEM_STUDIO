@@ -4,7 +4,7 @@
 
 ## Aktif
 - **Modül:** M2 — Ayrıklaştırma ve çözüm
-- **Adım:** M2.2 — Eleman matrisleri (sayısal yol)
+- **Adım:** M2.3 — Eleman matrisleri (tam sembolik yol)
 - **Gün:** 2 / 7
 
 ## Ortam (M0.1'de doldurulur)
@@ -35,6 +35,7 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | M1.2 | ✅ | `fem1d/mesh.py` (`build_mesh`); tekdüze ağ, P1 (n+1 düğüm) ve P2 (2n+1 düğüm) bağlantı tablosu; eleman k → P1 `[k,k+1]`, P2 `[2k,2k+1,2k+2]`; `make check` yeşil, CI yeşil | 2026-11-07 |
 | M1.3 | ✅ | `fem1d/elements.py`; P1/P2 referans şekil fonksiyonları (sayısal+sembolik) ve türevleri; Σ Nᵢ=1, Σ Nᵢ′=0, Nᵢ(ξⱼ)=δᵢⱼ, sembolik↔sayısal eşitlik; `make check` yeşil, CI yeşil | 2026-11-07 |
 | M2.1 | ✅ | `core/tests/fixtures/{B1_P1_n2,B1_P1_n4,B3_P1_n2}.json`; elle hesaplanmış K,F,U (kesir); `test_fixtures.py` ile iç tutarlılık (KU=F iç düğümlerde) doğrulandı; `make check` yeşil, CI yeşil | 2026-11-07 |
+| M2.2 | ✅ | `fem1d/element_matrices.py`: Gauss-Legendre kuadratürüyle K,C,M,F (P1/P2); §5.2 derece kuralıyla nokta sayısı, bilinmeyen derece için sabit nokta + `quadrature_approx=True`; hypothesis testleri §5.1 kapalı formlarla eşleşiyor; `make check` yeşil, CI yeşil | 2026-11-08 |
 
 ## Modül kapıları
 | Modül | Özet dosyası | Etiket | Kullanıcı onayı |
