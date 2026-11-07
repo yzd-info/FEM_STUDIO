@@ -4,7 +4,7 @@
 
 ## Aktif
 - **Modül:** M2 — Ayrıklaştırma ve çözüm
-- **Adım:** M2.1 — Elle hesaplanmış fikstürler
+- **Adım:** M2.2 — Eleman matrisleri (sayısal yol)
 - **Gün:** 2 / 7
 
 ## Ortam (M0.1'de doldurulur)
@@ -34,6 +34,7 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | M1.1 | ✅ | `fem1d/quadrature.py` (`gauss_legendre`, `integrate`); hypothesis testi m-point kuralın 2m−1 dereceye kadar tam, 2m derecede tam olmadığını doğruluyor; `make check` yeşil, CI yeşil | 2026-11-07 |
 | M1.2 | ✅ | `fem1d/mesh.py` (`build_mesh`); tekdüze ağ, P1 (n+1 düğüm) ve P2 (2n+1 düğüm) bağlantı tablosu; eleman k → P1 `[k,k+1]`, P2 `[2k,2k+1,2k+2]`; `make check` yeşil, CI yeşil | 2026-11-07 |
 | M1.3 | ✅ | `fem1d/elements.py`; P1/P2 referans şekil fonksiyonları (sayısal+sembolik) ve türevleri; Σ Nᵢ=1, Σ Nᵢ′=0, Nᵢ(ξⱼ)=δᵢⱼ, sembolik↔sayısal eşitlik; `make check` yeşil, CI yeşil | 2026-11-07 |
+| M2.1 | ✅ | `core/tests/fixtures/{B1_P1_n2,B1_P1_n4,B3_P1_n2}.json`; elle hesaplanmış K,F,U (kesir); `test_fixtures.py` ile iç tutarlılık (KU=F iç düğümlerde) doğrulandı; `make check` yeşil, CI yeşil | 2026-11-07 |
 
 ## Modül kapıları
 | Modül | Özet dosyası | Etiket | Kullanıcı onayı |
