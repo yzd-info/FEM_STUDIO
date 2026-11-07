@@ -3,8 +3,8 @@
 > Claude Code her adımın başında (🔄) ve sonunda (✅) günceller. Güncelleme adımın commit'ine dahildir.
 
 ## Aktif
-- **Modül:** M0 — Kurulum ve iskelet
-- **Adım:** 🚦 M0 kapısı — modül sonu özeti bekleniyor
+- **Modül:** M1 — Referans eleman
+- **Adım:** M1.1 — Gauss–Legendre kareleme
 - **Gün:** 1 / 7
 
 ## Ortam (M0.1'de doldurulur)
@@ -36,7 +36,7 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | Modül | Özet dosyası | Etiket | Kullanıcı onayı |
 |---|---|---|---|
 | G0 (repo) | — | — | ⏳ |
-| M0 | docs/learning/M0.md | m0-done | ⏳ |
+| M0 | docs/learning/M0.md | m0-done | ✅ (2026-11-07) |
 | M1 | docs/learning/M1.md | m1-done | ⏳ |
 | M2 | docs/learning/M2.md | m2-done | ⏳ |
 | M3 | docs/learning/M3.md | m3-done | ⏳ |
