@@ -4,7 +4,7 @@
 
 ## Aktif
 - **Modül:** M1 — Referans eleman
-- **Adım:** M1.1 — Gauss–Legendre kareleme
+- **Adım:** M1.2 — Ağ (uniform mesh, P1/P2 connectivity)
 - **Gün:** 1 / 7
 
 ## Ortam (M0.1'de doldurulur)
@@ -31,6 +31,7 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | M0.4 | ✅ | `core/pyproject.toml` (src layout, ruff+mypy+pytest+hypothesis+scikit-fem); `fem1d/__init__.py` (`__version__="0.1.0"`); `test_version_is_semver_string` kırmızı→yeşil; `uv run ruff check`/`ruff format --check`/`mypy` temiz | 2026-11-07 |
 | M0.5 | ✅ | Vite+TS strict scaffold (`npm create vite -- --template vanilla-ts`), boş sayfa ("FEM1D Studio"); vitest (jsdom) + Playwright (Chromium) kuruldu; `smoke.test.ts` ve `smoke.spec.ts` kırmızı→yeşil; `tsc --noEmit` temiz | 2026-11-07 |
 | M0.6 | ✅ | `Makefile` (§12.1 hedefleri) + `.github/workflows/ci.yml` (python, web işleri); yerelde `make check` ve `make e2e` yeşil; CI ilk push'ta doğrulanacak | 2026-11-07 |
+| M1.1 | ✅ | `fem1d/quadrature.py` (`gauss_legendre`, `integrate`); hypothesis testi m-point kuralın 2m−1 dereceye kadar tam, 2m derecede tam olmadığını doğruluyor; `make check` yeşil, CI yeşil | 2026-11-07 |
 
 ## Modül kapıları
 | Modül | Özet dosyası | Etiket | Kullanıcı onayı |
