@@ -4,7 +4,7 @@
 
 ## Aktif
 - **Modül:** M0 — Kurulum ve iskelet
-- **Adım:** M0.6 — Makefile + CI
+- **Adım:** 🚦 M0 kapısı — modül sonu özeti bekleniyor
 - **Gün:** 1 / 7
 
 ## Ortam (M0.1'de doldurulur)
@@ -17,6 +17,7 @@
 | python (yerel) | 3.14.7 | Pyodide'in Python minör sürümüyle (3.14) eşleşiyor |
 | Pyodide (hedef) | 314.0.7 (2026-09-14) | içerdiği Python: 3.14.2 — [değişiklik günlüğü](https://pyodide.org/en/stable/project/changelog.html) |
 | TeX (yerel, isteğe bağlı) | — | kurulu değil; yoksa LaTeX derlemesi yalnızca CI'da yapılır (engel değil) |
+| make | 4.4.1 (ezwinports) | M0.1'de atlanmış, M0.6'da fark edilip kuruldu (`winget install ezwinports.make`) |
 
 ## Adımlar
 Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullanıcı onayı bekleniyor
@@ -29,6 +30,7 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | M0.3 | ✅ | `gh auth login` (yzd-info) tamamlandı; `gh repo create FEM_STUDIO --public --source . --remote origin --push` → https://github.com/yzd-info/FEM_STUDIO | 2026-11-07 |
 | M0.4 | ✅ | `core/pyproject.toml` (src layout, ruff+mypy+pytest+hypothesis+scikit-fem); `fem1d/__init__.py` (`__version__="0.1.0"`); `test_version_is_semver_string` kırmızı→yeşil; `uv run ruff check`/`ruff format --check`/`mypy` temiz | 2026-11-07 |
 | M0.5 | ✅ | Vite+TS strict scaffold (`npm create vite -- --template vanilla-ts`), boş sayfa ("FEM1D Studio"); vitest (jsdom) + Playwright (Chromium) kuruldu; `smoke.test.ts` ve `smoke.spec.ts` kırmızı→yeşil; `tsc --noEmit` temiz | 2026-11-07 |
+| M0.6 | ✅ | `Makefile` (§12.1 hedefleri) + `.github/workflows/ci.yml` (python, web işleri); yerelde `make check` ve `make e2e` yeşil; CI ilk push'ta doğrulanacak | 2026-11-07 |
 
 ## Modül kapıları
 | Modül | Özet dosyası | Etiket | Kullanıcı onayı |
