@@ -4,14 +4,14 @@
 
 ## Aktif
 - **Modül:** M0 — Kurulum ve iskelet
-- **Adım:** M0.3 — GitHub (repo adı: FEM_STUDIO, public — G0 onaylandı)
+- **Adım:** M0.5 — Web iskeleti
 - **Gün:** 1 / 7
 
 ## Ortam (M0.1'de doldurulur)
 | Araç | Sürüm | Not |
 |---|---|---|
 | git | 2.55.0.windows.3 | OK |
-| gh (auth) | 2.103.3 | kuruldu (winget); `gh auth login` henüz yapılmadı, M0.3'te gerekecek |
+| gh (auth) | 2.103.3 | giriş yapıldı: yzd-info (M0.3) |
 | uv | 0.13.7 | kuruldu (winget) |
 | node | v24.19.0 | LTS (Node 24, Maintenance LTS — EOL 2028-04-30) |
 | python (yerel) | 3.14.7 | Pyodide'in Python minör sürümüyle (3.14) eşleşiyor |
@@ -26,6 +26,8 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | M0.1 | ✅ | git/node/python mevcut; Pyodide 314.0.7 (Python 3.14.2) seçildi, yerel Python 3.14.7 minör sürümde eşleşiyor; gh ve uv winget ile kuruldu | 2026-11-04 |
 | M0.2 | ✅ | `git init -b main`; `.gitignore` eklendi; README taslağı zaten mevcuttu | 2026-11-07 |
 | G0 | ✅ | Kullanıcı onayı: repo adı `FEM_STUDIO`, görünürlük public | 2026-11-07 |
+| M0.3 | ✅ | `gh auth login` (yzd-info) tamamlandı; `gh repo create FEM_STUDIO --public --source . --remote origin --push` → https://github.com/yzd-info/FEM_STUDIO | 2026-11-07 |
+| M0.4 | ✅ | `core/pyproject.toml` (src layout, ruff+mypy+pytest+hypothesis+scikit-fem); `fem1d/__init__.py` (`__version__="0.1.0"`); `test_version_is_semver_string` kırmızı→yeşil; `uv run ruff check`/`ruff format --check`/`mypy` temiz | 2026-11-07 |
 
 ## Modül kapıları
 | Modül | Özet dosyası | Etiket | Kullanıcı onayı |
