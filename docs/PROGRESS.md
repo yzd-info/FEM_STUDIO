@@ -3,9 +3,9 @@
 > Claude Code her adımın başında (🔄) ve sonunda (✅) günceller. Güncelleme adımın commit'ine dahildir.
 
 ## Aktif
-- **Modül:** M1 — Referans eleman
-- **Adım:** 🚦 M1 kapısı — modül sonu özeti bekleniyor
-- **Gün:** 1 / 7
+- **Modül:** M2 — Ayrıklaştırma ve çözüm
+- **Adım:** M2.1 — Elle hesaplanmış fikstürler
+- **Gün:** 2 / 7
 
 ## Ortam (M0.1'de doldurulur)
 | Araç | Sürüm | Not |
@@ -40,7 +40,7 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 |---|---|---|---|
 | G0 (repo) | — | — | ⏳ |
 | M0 | docs/learning/M0.md | m0-done | ✅ (2026-11-07) |
-| M1 | docs/learning/M1.md | m1-done | 🚦 özet hazır, onay bekleniyor |
+| M1 | docs/learning/M1.md | m1-done | ✅ (2026-11-08) |
 | M2 | docs/learning/M2.md | m2-done | ⏳ |
 | M3 | docs/learning/M3.md | m3-done | ⏳ |
 | M4 | docs/learning/M4.md | m4-done | ⏳ |
