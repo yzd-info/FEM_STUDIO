@@ -14,7 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
-        run: curl -LsSf https://astral.sh/install.sh | sh
+        run: |
+          curl -LsSf https://astral.sh/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - run: uv sync
       - run: uv run ruff check .
       - run: uv run ruff format --check .
