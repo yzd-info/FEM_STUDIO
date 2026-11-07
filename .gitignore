@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+web/dist/
+
+# Pyodide wheels (fetched at build/test time, not vendored)
+web/public/*.whl
+
+# Reference material and generated artifacts
+research/
+*.pdf
+
+# Env
+.env
