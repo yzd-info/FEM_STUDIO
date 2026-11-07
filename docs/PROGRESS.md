@@ -4,7 +4,7 @@
 
 ## Aktif
 - **Modül:** M1 — Referans eleman
-- **Adım:** M1.2 — Ağ (uniform mesh, P1/P2 connectivity)
+- **Adım:** M1.3 — Şekil fonksiyonları (P1/P2, sayısal + sembolik)
 - **Gün:** 1 / 7
 
 ## Ortam (M0.1'de doldurulur)
@@ -32,6 +32,7 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | M0.5 | ✅ | Vite+TS strict scaffold (`npm create vite -- --template vanilla-ts`), boş sayfa ("FEM1D Studio"); vitest (jsdom) + Playwright (Chromium) kuruldu; `smoke.test.ts` ve `smoke.spec.ts` kırmızı→yeşil; `tsc --noEmit` temiz | 2026-11-07 |
 | M0.6 | ✅ | `Makefile` (§12.1 hedefleri) + `.github/workflows/ci.yml` (python, web işleri); yerelde `make check` ve `make e2e` yeşil; CI ilk push'ta doğrulanacak | 2026-11-07 |
 | M1.1 | ✅ | `fem1d/quadrature.py` (`gauss_legendre`, `integrate`); hypothesis testi m-point kuralın 2m−1 dereceye kadar tam, 2m derecede tam olmadığını doğruluyor; `make check` yeşil, CI yeşil | 2026-11-07 |
+| M1.2 | ✅ | `fem1d/mesh.py` (`build_mesh`); tekdüze ağ, P1 (n+1 düğüm) ve P2 (2n+1 düğüm) bağlantı tablosu; eleman k → P1 `[k,k+1]`, P2 `[2k,2k+1,2k+2]`; `make check` yeşil, CI yeşil | 2026-11-07 |
 
 ## Modül kapıları
 | Modül | Özet dosyası | Etiket | Kullanıcı onayı |
