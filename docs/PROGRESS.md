@@ -4,7 +4,7 @@
 
 ## Aktif
 - **Modül:** M2 — Ayrıklaştırma ve çözüm
-- **Adım:** M2.3 — Eleman matrisleri (tam sembolik yol)
+- **Adım:** M2.7 — Bağımsız kâhin (scikit-fem)
 - **Gün:** 2 / 7
 
 ## Ortam (M0.1'de doldurulur)

@@ -11,15 +11,24 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 import numpy as np
+import sympy as sp
 from numpy.typing import NDArray
 
-from fem1d.elements import local_nodes, shape_function_derivatives, shape_functions
+from fem1d.elements import (
+    local_nodes,
+    shape_function_derivatives,
+    shape_functions,
+    shape_functions_symbolic,
+)
 from fem1d.mesh import ElementType
 from fem1d.quadrature import gauss_legendre
 
 Coefficient = Callable[[float], float]
 
 _FALLBACK_POINTS: dict[ElementType, int] = {"P1": 8, "P2": 10}
+
+_X = sp.Symbol("x")
+_XI = sp.Symbol("xi")
 
 
 @dataclass(frozen=True)
@@ -100,3 +109,75 @@ def element_matrices(
         F += w * jacobian * f(x) * n
 
     return ElementMatrices(K=K, C=C, M=M, F=F, quadrature_approx=quadrature_approx)
+
+
+@dataclass(frozen=True)
+class ElementMatricesSymbolic:
+    """Exact K, C, M element matrices and F load vector (docs/MATH_SPEC.md §5.2.1)."""
+
+    K: sp.Matrix
+    C: sp.Matrix
+    M: sp.Matrix
+    F: sp.Matrix
+    exact: bool
+
+
+def _integrate_bounded(integrand: sp.Expr, a: sp.Expr, b: sp.Expr) -> tuple[sp.Expr, bool]:
+    result = sp.integrate(integrand, (_X, a, b))
+    return result, not result.has(sp.Integral)
+
+
+def _symbolic_shape_functions(
+    element_type: ElementType, a: sp.Expr, b: sp.Expr
+) -> tuple[list[sp.Expr], list[sp.Expr]]:
+    h = b - a
+    xi_of_x = 2 * (_X - a) / h - 1
+    n_x = [expr.subs(_XI, xi_of_x) for expr in shape_functions_symbolic(element_type)]
+    dn_x = [sp.diff(n, _X) for n in n_x]
+    return n_x, dn_x
+
+
+def element_matrices_symbolic(
+    element_type: ElementType,
+    interval: tuple[sp.Expr, sp.Expr],
+    p: sp.Expr,
+    q: sp.Expr,
+    r: sp.Expr,
+    f: sp.Expr,
+) -> ElementMatricesSymbolic:
+    """Exact element matrices via SymPy ``integrate`` (docs/MATH_SPEC.md §5.2.1).
+
+    ``exact`` is False for any entry where SymPy could not reach a closed form
+    (the result still contains an unevaluated ``Integral``); the caller should
+    then fall back to :func:`element_matrices` (numeric quadrature).
+    """
+    a, b = interval
+    ndof = len(local_nodes(element_type))
+    n_x, dn_x = _symbolic_shape_functions(element_type, a, b)
+
+    K = sp.zeros(ndof, ndof)
+    C = sp.zeros(ndof, ndof)
+    M = sp.zeros(ndof, ndof)
+    F = sp.zeros(ndof, 1)
+    exact = True
+
+    for i in range(ndof):
+        for j in range(i, ndof):  # K, M symmetric in (i, j); compute once, mirror
+            k_val, k_exact = _integrate_bounded(p * dn_x[i] * dn_x[j], a, b)
+            K[i, j] = K[j, i] = k_val
+            exact = exact and k_exact
+
+            m_val, m_exact = _integrate_bounded(r * n_x[i] * n_x[j], a, b)
+            M[i, j] = M[j, i] = m_val
+            exact = exact and m_exact
+
+        for j in range(ndof):
+            c_val, c_exact = _integrate_bounded(q * n_x[i] * dn_x[j], a, b)
+            C[i, j] = c_val
+            exact = exact and c_exact
+
+        f_val, f_exact = _integrate_bounded(f * n_x[i], a, b)
+        F[i, 0] = f_val
+        exact = exact and f_exact
+
+    return ElementMatricesSymbolic(K=K, C=C, M=M, F=F, exact=exact)
