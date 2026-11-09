@@ -3,8 +3,8 @@
 > Claude Code her adımın başında (🔄) ve sonunda (✅) günceller. Güncelleme adımın commit'ine dahildir.
 
 ## Aktif
-- **Modül:** M2 — Ayrıklaştırma ve çözüm
-- **Adım:** M2.7 — Bağımsız kâhin (scikit-fem)
+- **Modül:** M3 — ODE ayrıştırıcı ve analitik çözüm
+- **Adım:** M3.1 — Girdi ayrıştırıcı
 - **Gün:** 2 / 7
 
 ## Ortam (M0.1'de doldurulur)
@@ -37,7 +37,9 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | M2.1 | ✅ | `core/tests/fixtures/{B1_P1_n2,B1_P1_n4,B3_P1_n2}.json`; elle hesaplanmış K,F,U (kesir); `test_fixtures.py` ile iç tutarlılık (KU=F iç düğümlerde) doğrulandı; `make check` yeşil, CI yeşil | 2026-11-07 |
 | M2.2 | ✅ | `fem1d/element_matrices.py`: Gauss-Legendre kuadratürüyle K,C,M,F (P1/P2); §5.2 derece kuralıyla nokta sayısı, bilinmeyen derece için sabit nokta + `quadrature_approx=True`; hypothesis testleri §5.1 kapalı formlarla eşleşiyor; `make check` yeşil, CI yeşil | 2026-11-08 |
 | M2.3 | ✅ | `fem1d/element_matrices.py`: `element_matrices_symbolic` (SymPy `integrate`, §5.2.1), K/M simetrisinden yararlanılarak hesaplanıyor; `exact=False` sonuçta `Integral` kalırsa (ör. tanımsız `g(x)`); B3 kapalı-form fixture'ı, sabit katsayıda sayısal kuadratürle eşleşme (hypothesis, `rtol=atol=1e-12`) ve tanımsız integrand testleriyle doğrulandı; `uv run pytest -m "not slow"` → 927 passed (675.29s); `make check` tam yeşil (ruff/mypy/tsc/pytest/vitest) | 2026-11-09 |
-| M2.4–M2.6, M4.1–M4.3 | ✅ | **Not (sıra sapması):** bu adımların kodu (`assembly.py`, `boundary.py`, `solver.py`, `analysis.py` + testleri + `tests/bench.py`/`conftest.py`/`tests/integration/`) M2.3'ten önce, pipeline sırası dışında yazılmış halde bulundu. Kullanıcı onayı (2026-11-09): M2.3 önce bitirilip koddan geriye doğru sıra düzeltilsin, bu dosyalar olduğu gibi tutulup doğrulansın. `uv run pytest -m "not slow"` çalıştırıldı → 927 passed, 0 failed (bu dosyaları kapsayan testler dahil); ayrı commit'lerle kayda geçiriliyor | 2026-11-09 |
+| M2.4–M2.6, M4.1–M4.3 | ✅ | **Not (sıra sapması):** bu adımların kodu (`assembly.py`, `boundary.py`, `solver.py`, `analysis.py` + testleri + `tests/bench.py`/`conftest.py`/`tests/integration/`) M2.3'ten önce, pipeline sırası dışında yazılmış halde bulundu. Kullanıcı onayı (2026-11-09): M2.3 önce bitirilip koddan geriye doğru sıra düzeltilsin, bu dosyalar olduğu gibi tutulup doğrulansın. `uv run pytest -m "not slow"` çalıştırıldı → 927 passed, 0 failed (bu dosyaları kapsayan testler dahil); ayrı commit'lerle kayda geçirildi (M2.4: `b12e51b`, M2.5: `6a98375`, M2.6: `2b0c38b`, M4.1-M4.3: `d7ea15b`) | 2026-11-09 |
+| M2.7 | ✅ | `core/tests/oracle/test_scikit_fem_oracle.py`: scikit-fem ile tamamen bağımsız bir montaj (kendi `BilinearForm`/`LinearForm`, kendi kareleme) ve çözüm (`condense`+`solve`); yalnızca Robin/Neumann köşe terimi cebiri `boundary.py` ile aynı formülü (temel cebir, ayrıklaştırmanın kendisi değil) kullanıyor. B1–B10, P1/P2, n=6: göreli fark en fazla ~4.9e-15 (eşik 1e-10, `docs/TESTING.md` §1); 20/20 passed. `make check` tam yeşil: ruff/mypy/tsc temiz, `uv run pytest -m "not slow"` → 947 passed (725.44s), vitest 1 passed | 2026-11-09 |
+| M2.8 | ✅ | Yeni kod gerekmedi: pipeline'ın istediği kapsam (B1, B6, B7, M2, M3, M4) M2.6 toplu commit'inde (`2b0c38b`) zaten vardı — `test_p1_rates_and_p2_exactness_for_polynomial_solutions_of_degree_le_2` (a: P_k içindeki tam çözüm → FEM tam; B1,B6,B7,M2) ve `test_nodal_superconvergence_when_p_constant_and_q_r_zero` (b: sabit p, q=r=0 → uç düğümler tam; B1,B2,B6,B7,M2,M3,M4) `core/tests/integration/test_fem_end_to_end.py`'de doğrulanmış halde | 2026-11-09 |
 
 ## Modül kapıları
 | Modül | Özet dosyası | Etiket | Kullanıcı onayı |
@@ -45,7 +47,7 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | G0 (repo) | — | — | ⏳ |
 | M0 | docs/learning/M0.md | m0-done | ✅ (2026-11-07) |
 | M1 | docs/learning/M1.md | m1-done | ✅ (2026-11-08) |
-| M2 | docs/learning/M2.md | m2-done | ⏳ |
+| M2 | docs/learning/M2.md (henüz yazılmadı — kural 5 esnemesiyle sonradan/toplu yazılacak, 2026-11-09) | m2-done | ⏳ (kullanıcı 2026-11-09: durmadan devam et) |
 | M3 | docs/learning/M3.md | m3-done | ⏳ |
 | M4 | docs/learning/M4.md | m4-done | ⏳ |
 | M5 | docs/learning/M5.md | m5-done | ⏳ |
