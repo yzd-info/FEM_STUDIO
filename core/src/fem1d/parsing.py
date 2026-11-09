@@ -1,4 +1,6 @@
-"""Parse ODE text into SymPy expressions (docs/MATH_SPEC.md §9; step M3.1).
+"""Parse ODE text into SymPy expressions (docs/MATH_SPEC.md §9; step M3.1)
+and convert the general linear form into canonical divergence form
+(docs/MATH_SPEC.md §1.1; step M3.2).
 
 No `eval`: the text is first rewritten (`'` and `diff(u, x, k)` derivative
 notation become explicit `Derivative(...)` calls, `^` becomes `**`, bare `u`/`y`
@@ -149,3 +151,67 @@ def parse_equation(text: str) -> ParsedEquation:
         raise ParseError(f"Girdi ayrıştırılamadı: {exc}") from exc
 
     return ParsedEquation(lhs=sp.sympify(lhs).doit(), rhs=sp.sympify(rhs).doit())
+
+
+@dataclass(frozen=True)
+class CanonicalStep:
+    """One recorded stage of the general-to-canonical transformation (M5 derivation step 1)."""
+
+    description: str
+    a2: sp.Expr
+    a1: sp.Expr
+    a0: sp.Expr
+    g: sp.Expr
+
+
+@dataclass(frozen=True)
+class Canonical:
+    """`-(p*u')' + q*u' + r*u = f` (docs/MATH_SPEC.md §1), plus how we got here."""
+
+    p: sp.Expr
+    q: sp.Expr
+    r: sp.Expr
+    f: sp.Expr
+    steps: tuple[CanonicalStep, ...]
+
+
+def canonicalize(parsed: ParsedEquation) -> Canonical:
+    """`a2*u'' + a1*u' + a0*u = g` -> canonical `(p, q, r, f)` (docs/MATH_SPEC.md §1.1).
+
+    `p = -a2`, `q = a1 - a2'`, `r = a0`, `f = g`. If `a2` is "positive-flavoured"
+    the whole equation is first multiplied by -1 so that `p > 0` (ellipticity);
+    `a2.could_extract_minus_sign()` tells positive- from negative-flavoured.
+    """
+    residual = parsed.residual
+    u = _U(X)
+    u2, u1 = sp.Derivative(u, X, 2), sp.Derivative(u, X)
+
+    a2 = residual.coeff(u2)
+    remainder = sp.expand(residual - a2 * u2)
+    a1 = remainder.coeff(u1)
+    remainder = sp.expand(remainder - a1 * u1)
+    a0 = remainder.coeff(u)
+    remainder = sp.expand(remainder - a0 * u)
+    g = sp.expand(-remainder)
+
+    steps = [CanonicalStep("Genel lineer form ayrıştırıldı: a₂u'' + a₁u' + a₀u = g", a2, a1, a0, g)]
+
+    if not a2.could_extract_minus_sign():
+        a2, a1, a0, g = -a2, -a1, -a0, -g
+        steps.append(
+            CanonicalStep(
+                "a₂ pozitif işaretli olduğundan eliptiklik (p>0) için denklem -1 ile çarpıldı",
+                a2,
+                a1,
+                a0,
+                g,
+            )
+        )
+
+    p = sp.expand(-a2)
+    q = sp.expand(a1 - sp.diff(a2, X))
+    r = sp.expand(a0)
+    f = sp.expand(g)
+    steps.append(CanonicalStep("Kanonik forma yazıldı: p=-a₂, q=a₁-a₂', r=a₀, f=g", p, q, r, f))
+
+    return Canonical(p=p, q=q, r=r, f=f, steps=tuple(steps))

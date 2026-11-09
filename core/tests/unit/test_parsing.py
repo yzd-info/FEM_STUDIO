@@ -8,8 +8,10 @@ that the restricted namespace must reject without ever calling `eval`.
 
 import pytest
 import sympy as sp
+from hypothesis import given
+from hypothesis import strategies as st
 
-from fem1d.parsing import ParseError, X, parse_equation
+from fem1d.parsing import ParsedEquation, ParseError, X, canonicalize, parse_equation
 
 _U = sp.Function("u")(X)
 
@@ -175,3 +177,75 @@ def test_unmatched_parens_message_is_turkish() -> None:
     # message fires directly, before the text ever reaches sympy's parser.
     with pytest.raises(ParseError, match="[Pp]aranez|eşleşmiyor"):
         parse_equation(")' = 1")
+
+
+# --- M3.2: canonicalization, docs/MATH_SPEC.md §1.1 -------------------------
+
+
+@pytest.mark.parametrize(
+    "text,p,q,r,f",
+    [
+        ("-u'' = 1", 1, 0, 0, 1),
+        ("-((1+x)*u')' = 1", 1 + X, 0, 0, 1),
+        ("-(1+x)*u'' - u' = 1", 1 + X, 0, 0, 1),
+        ("u'' - u = -x", 1, 0, 1, X),
+        ("-0.05*u'' + u' = 0", sp.Float(0.05), 1, 0, 0),
+        ("u'' + 100*u = 0", 1, 0, -100, 0),
+        (
+            "-diff(exp(x)*diff(u,x),x) = exp(x)*(1+2*x)",
+            sp.exp(X),
+            0,
+            0,
+            sp.exp(X) * (1 + 2 * X),
+        ),
+        ("-u'' + u' + 2*u = 2*exp(x)", 1, 1, 2, 2 * sp.exp(X)),
+        ("y'' = 12*x^2", 1, 0, 0, -12 * X**2),
+    ],
+    ids=["B1", "B3-prime", "B3-expanded", "B4", "B5", "B8", "B9", "B10", "M4"],
+)
+def test_canonical_matches_benchmarks(
+    text: str, p: sp.Expr, q: sp.Expr, r: sp.Expr, f: sp.Expr
+) -> None:
+    canonical = canonicalize(parse_equation(text))
+    assert sp.simplify(canonical.p - p) == 0
+    assert sp.simplify(canonical.q - q) == 0
+    assert sp.simplify(canonical.r - r) == 0
+    assert sp.simplify(canonical.f - f) == 0
+
+
+def test_canonical_records_at_least_the_general_and_final_steps() -> None:
+    # the final step's fields are repurposed to hold (p, q, r, f) directly.
+    canonical = canonicalize(parse_equation("-u'' = 1"))
+    assert len(canonical.steps) >= 2
+    last = canonical.steps[-1]
+    assert sp.simplify(last.a2 - canonical.p) == 0
+    assert sp.simplify(last.g - canonical.f) == 0
+
+
+def test_canonical_records_sign_flip_step_when_a2_is_positive_flavoured() -> None:
+    # B4: a2 = 1 (positive-flavoured) -> an explicit "multiply by -1" step is recorded.
+    canonical = canonicalize(parse_equation("u'' - u = -x"))
+    assert len(canonical.steps) == 3
+    assert "-1" in canonical.steps[1].description
+
+
+@given(
+    a2=st.integers(min_value=-5, max_value=5).filter(lambda v: v != 0),
+    a1=st.integers(min_value=-5, max_value=5),
+    a0=st.integers(min_value=-5, max_value=5),
+    g0=st.integers(min_value=-5, max_value=5),
+    g1=st.integers(min_value=-5, max_value=5),
+    g2=st.integers(min_value=-5, max_value=5),
+)
+def test_canonical_reconstructs_original_up_to_sign(
+    a2: int, a1: int, a0: int, g0: int, g1: int, g2: int
+) -> None:
+    u2, u1 = sp.Derivative(_U, X, 2), sp.Derivative(_U, X)
+    g = g0 + g1 * X + g2 * X**2
+    parsed = ParsedEquation(lhs=sp.expand(a2 * u2 + a1 * u1 + a0 * _U), rhs=g)
+    canonical = canonicalize(parsed)
+
+    sign = -1 if not sp.Integer(a2).could_extract_minus_sign() else 1
+    reconstructed = sp.expand(-canonical.p * u2 + canonical.q * u1 + canonical.r * _U - canonical.f)
+    expected = sp.expand(sign * parsed.residual)
+    assert reconstructed == expected
