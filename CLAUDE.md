@@ -23,7 +23,10 @@ bilimsel bir araç. **Süre: 7 gün. Kapsam `pipeline.md` §2'de dondurulmuştur
 2. **Kapsamı genişletme.** §2'de "kapsam dışı" olan bir şey istenirse bile önce kullanıcıya süreye etkisini söyle ve onay al.
 3. **Teknoloji kararları sabittir** (`docs/DECISIONS.md`). Yeni karar = yeni ADR + kullanıcı onayı.
 4. **Adım Protokolü her adımda** (`pipeline.md` §6): test önce → uygula → `make check` → diff incele → commit → push → CI yeşil.
-5. **Modül sonunda DUR** (🚦). Özet yazılmadan ve kullanıcı "devam" demeden sonraki modüle geçme.
+5. **Modül sonu özeti isteğe bağlıdır** (kullanıcı onayı: 2026-11-09). Kullanıcı "devam, durma" dediği oturumlarda
+   her modül sonunda durup özet yazmak ve onay beklemek zorunlu değildir; `docs/learning/*.md` özetleri toplu/sonradan
+   yazılabilir. Bu esneme **yalnızca** bu kurala uygulanır — kırmızı testle commit yasağı, 3 deneme kuralı ve adım
+   atlamama kuralı aynen geçerlidir.
 6. **Kırmızı testle commit yok.** `--no-verify`, `--force`, `amend` (push edilmiş commit'e), test silme, `skip`/`xfail`, toleransı gevşetme: kullanıcı onayı olmadan yasak.
 7. **3 deneme kuralı:** Aynı hata 3 denemede çözülmezse dur; hatayı, denenenleri, hipotezleri PROGRESS → "Engeller"e yaz, kullanıcıya sor.
 
