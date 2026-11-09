@@ -4,7 +4,7 @@
 
 ## Aktif
 - **Modül:** M3 — ODE ayrıştırıcı ve analitik çözüm
-- **Adım:** M3.1 — Girdi ayrıştırıcı
+- **Adım:** M3.2 — Kanonikleştirme
 - **Gün:** 2 / 7
 
 ## Ortam (M0.1'de doldurulur)
@@ -40,6 +40,7 @@ Durumlar: ⏳ bekliyor · 🔄 devam · ✅ bitti · ⛔ engelli · 🚦 kullan�
 | M2.4–M2.6, M4.1–M4.3 | ✅ | **Not (sıra sapması):** bu adımların kodu (`assembly.py`, `boundary.py`, `solver.py`, `analysis.py` + testleri + `tests/bench.py`/`conftest.py`/`tests/integration/`) M2.3'ten önce, pipeline sırası dışında yazılmış halde bulundu. Kullanıcı onayı (2026-11-09): M2.3 önce bitirilip koddan geriye doğru sıra düzeltilsin, bu dosyalar olduğu gibi tutulup doğrulansın. `uv run pytest -m "not slow"` çalıştırıldı → 927 passed, 0 failed (bu dosyaları kapsayan testler dahil); ayrı commit'lerle kayda geçirildi (M2.4: `b12e51b`, M2.5: `6a98375`, M2.6: `2b0c38b`, M4.1-M4.3: `d7ea15b`) | 2026-11-09 |
 | M2.7 | ✅ | `core/tests/oracle/test_scikit_fem_oracle.py`: scikit-fem ile tamamen bağımsız bir montaj (kendi `BilinearForm`/`LinearForm`, kendi kareleme) ve çözüm (`condense`+`solve`); yalnızca Robin/Neumann köşe terimi cebiri `boundary.py` ile aynı formülü (temel cebir, ayrıklaştırmanın kendisi değil) kullanıyor. B1–B10, P1/P2, n=6: göreli fark en fazla ~4.9e-15 (eşik 1e-10, `docs/TESTING.md` §1); 20/20 passed. `make check` tam yeşil: ruff/mypy/tsc temiz, `uv run pytest -m "not slow"` → 947 passed (725.44s), vitest 1 passed | 2026-11-09 |
 | M2.8 | ✅ | Yeni kod gerekmedi: pipeline'ın istediği kapsam (B1, B6, B7, M2, M3, M4) M2.6 toplu commit'inde (`2b0c38b`) zaten vardı — `test_p1_rates_and_p2_exactness_for_polynomial_solutions_of_degree_le_2` (a: P_k içindeki tam çözüm → FEM tam; B1,B6,B7,M2) ve `test_nodal_superconvergence_when_p_constant_and_q_r_zero` (b: sabit p, q=r=0 → uç düğümler tam; B1,B2,B6,B7,M2,M3,M4) `core/tests/integration/test_fem_end_to_end.py`'de doğrulanmış halde | 2026-11-09 |
+| M3.1 | ✅ | `fem1d/parsing.py`: `parse_equation` — `'`/`diff(u,x,k)`/`(ifade*u')'` (çarpım kuralıyla, `Derivative.doit()`) → SymPy; beyaz liste ad alanı (`parse_expr(..., global_dict={})`, `eval` yok), ek olarak izin verilen karakter kümesi ve Python anahtar kelime reddi (`__import__`, `and`, `if`... güvenlik için). Test: `core/tests/unit/test_parsing.py`, `BENCHMARKS.md` §2'nin tamamı (B1,B3,B3′,B4,B5,B8,B9,B10,M4) + 20 geçersiz girdi (enjeksiyon denemeleri dahil) = 46 test. `make check` tam yeşil: ruff/mypy/tsc temiz, `uv run pytest -m "not slow"` → 993 passed (774.58s), vitest 1 passed | 2026-11-09 |
 
 ## Modül kapıları
 | Modül | Özet dosyası | Etiket | Kullanıcı onayı |
